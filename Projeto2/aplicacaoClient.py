@@ -18,7 +18,7 @@ t_start = time.time()
 # python -m serial.tools.list_ports
 # se estiver usando windows, o gerenciador de dispositivos informa a porta
 
-serialName = "/dev/ttyACM0"           # Ubuntu (variacao de)
+serialName = "/dev/ttyACM2"           # Ubuntu (variacao de)
 #serialName = "/dev/cu.usbmodem1411" # Mac    (variacao de)
 #serialName = "COM6"                  # Windows(variacao de)
 

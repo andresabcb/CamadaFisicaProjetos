@@ -78,7 +78,15 @@ def main():
         ## SENDING IMAGE
         if resposta != zero_em_bytes:
             time.sleep(0.5)
-        send_package(txBuffer,com1)
+            send_package(txBuffer,com1,1)
+
+            ## ERRO ITEM 4
+            # descomentar quando for fazer o teste
+            #send_package(txBuffer,com1,4)
+
+            ## ERRO ITEM 3
+            # descomentar quando for fazer o teste
+            #send_package(txBuffer,com1,3)
     
         # Encerra comunicação
         print("-------------------------")

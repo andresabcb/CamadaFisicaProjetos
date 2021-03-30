@@ -62,11 +62,13 @@ def main():
         # inicializando para entrar no while
         number_package = 0
         package_total = 1
+
+        num_package = number_package - 1 # teste item 3
         while number_package < package_total:
             # recebendo o head antes, e depois 
             # conferindo o tamanho do package
             # para usar no getData
-            head_eop, nhead_eop = com2.getData(14)
+            head_eop, nhead_eop = com2.getDataHandshake(14)
             print(f'head e eop recebidos: {head_eop}')
             package_len = int.from_bytes(head_eop[4:6],'big')
             print(f'esperando {package_len} bytes')
@@ -75,6 +77,13 @@ def main():
             print(f'pacote recebido: {package}')
             print(f'tamanho do pacote recebido: {npackage}')
 
+            # teste item 3
+            if number_package == num_package + 1:
+                print('Item 3 TUDO OK: a ordem está correta')
+            else:
+                print('Item 3 ATENÇÃO: a ordem dos pacotes está incorreta')
+                break
+
             check_parameters(package)
 
             head = package[:10]
@@ -82,6 +91,7 @@ def main():
             payload = package[10:-4]
             print(f'tamanho do payload = {len(payload)}')
 
+            num_package = number_package
             number_package = int.from_bytes(package[0:2],'big')
             package_total =  int.from_bytes(package[2:4],'big')
             print(f'Pacote {number_package} / {package_total}')

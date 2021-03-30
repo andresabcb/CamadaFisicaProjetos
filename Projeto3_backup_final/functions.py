@@ -118,15 +118,19 @@ def send_handshake(payload_handshake,com1):
             elif try_again == 'N' or try_again == 'n':
                 print('a conexão não foi estabelecida')
                 try_connection = False
+                return resposta, len_resposta
             else:
                 print('resposta não reconhecida\nfinalizando operação')
                 try_connection = False
+                return resposta, len_resposta
         else:
             if resposta == handshake:
                 print('enviado e recebido são iguais')
+            else:
+                print('enviado e recebido não são iguais')
             return resposta, len_resposta
 
-def send_package(file_bytes,com1):
+def send_package(file_bytes,com1,teste):
     print("começando o envio dos pacotes da imagem")
     file_size = len(file_bytes)
     # o package len vai ser o tanto de slices que vamos ter que dar na imagem
@@ -145,7 +149,16 @@ def send_package(file_bytes,com1):
             print('Não é o último pacote')
             payload = file_bytes[0+bytes_per_package*m:bytes_per_package*(m+1)]
 
-        package_len = len(payload) + 14 # len head + eop
+        # ERRO ITEM 4:
+        if teste == 4:
+            package_len = len(payload) + 14 - 2
+        else:
+            package_len = len(payload) + 14 # len head + eop
+        
+        # ERRO TESTE 3:
+        if teste == 3:
+            package_number += 2
+
         print(f'o tamanho do pacote é de: {package_len}')
         head_img, len_head_img = create_head(package_number,total_packages,package_len,0,1)
         print(f'o head do pacote é {head_img}')
@@ -156,10 +169,12 @@ def send_package(file_bytes,com1):
 
         check_parameters(package)
 
+        # teste item 4
         if package_len == len_package:
-            print('os lens sao iguais')
+            print('Item 4 TUDO OK: os lens sao iguais')
         else:
-            print('os lens sao diferentes')
+            print('Item 4 ATENÇÃO: os lens sao diferentes')
+            break
 
         head = package[:10]
         eop = package[-4:]
@@ -174,8 +189,12 @@ def send_package(file_bytes,com1):
         print(f'O tamanho do pacote enviado é {len(package)}')
         print(f"package número {package_number} enviado\naguardando resposta")
 
-        txresp, ntxresp = com1.getData(15)
+        txresp, ntxresp = com1.getDataHandshake(15)
         print(f'A resposta foi recebida: {txresp}')
+
+        zero_em_bytes = (0).to_bytes(1,byteorder='big')
+        if txresp == zero_em_bytes:
+            break
 
         package_number+=1
         m+=1
